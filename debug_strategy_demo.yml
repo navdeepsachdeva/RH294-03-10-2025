@@ -1,0 +1,51 @@
+- name: Debug Strategy Demo
+  hosts: servera*
+  gather_facts: false
+  strategy: debug
+  become: true
+  tasks:
+    - name: Task 1
+      ansible.builtin.command:
+        cmd: sleep 2
+      register: out
+    
+    - name: Install Web Server Task 21
+      ansible.builtin.dnf:
+        name: httpddd
+        state: present
+      # task.args
+      # task.args['name']='httpd'
+      # task.args
+      # redo
+
+    - name: Deploy Web App Task 22
+      ansible.builtin.copy:
+        dest: /var/wwwww/html/index.html
+        content: "Hello Web App {{ out.changed }}"
+        mode: "0644"
+      # task.args
+      # task.args['dest']='/var/www/html/index.html'
+      # task.args
+      # redo
+
+    - name: permit traffic for httpd
+      ansible.posix.firewalld:
+        service: httppp
+        permanent: true
+        stateeee: enabled
+        immediate: true
+      # task.args
+      # task.args['service']='http'
+      # task.args['state']='enabled'
+      # del(task.args['stateeee'])
+      # task.args
+      # redo
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpddd
+        state: started
+      # task.args
+      # task.args['name']='httpd'
+      # task.args
+      # redo

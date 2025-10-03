@@ -1,0 +1,65 @@
+- name: Advance Facts Demo
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    - name: Collect Harware/Custom Facts
+      ansible.builtin.setup:
+        gather_subset:
+          - "!all"
+          - "min"
+          - "network"
+          - "hardware"
+        fact_path: /etc/ansible/facts.d
+
+    - name: Store Facts
+      ansible.builtin.copy:
+        dest: /tmp/{{ inventory_hostname }}
+        content: |-
+          Magic Variable  = {{ inventory_hostname }}
+          Arch            = {{ ansible_facts['architecture'] }}
+          Date            = {{ ansible_facts['date_time']['date'] }}
+          Time            = {{ ansible_facts['date_time']['time'] }}
+          IP Address      = {{ ansible_facts['default_ipv4']['address'] }}
+          Mac Address     = {{ ansible_default_ipv4.macaddress }}
+          VDA Size        = {{ ansible_facts['devices']['vda']['size'] }}
+          OS Type         = {{ ansible_facts['distribution'] }}
+          OS Version      = {{ ansible_facts['distribution_version'] }}
+          FQDN            = {{ ansible_facts['fqdn'] }}
+          Hostname        = {{ ansible_hostname }}
+          Kernel          = {{ ansible_facts.kernel }}
+          Total Memory    = {{ ansible_facts['memory_mb']['real']['total'] }}
+          Free Memory     = {{ ansible_facts['memory_mb']['real']['free'] }}
+
+
+    - name: Collect Package Facts
+      ansible.builtin.package_facts:
+
+
+    - name: Print Package Facts
+      ansible.builtin.debug:
+        msg: "{{ ansible_facts.packages.httpd[0]['version'] }}"
+      when: ansible_facts.packages.httpd[0]['release'] > "7"
+
+    - name: Store Package Facts in File
+      ansible.builtin.lineinfile:
+        line: |
+
+          Package Information
+          {{ ansible_facts.packages.NetworkManager[0].name }} = {{ ansible_facts.packages.NetworkManager[0].release }}
+        path: /tmp/{{ inventory_hostname }}
+
+    - name: Collect Service Facts
+      ansible.builtin.service_facts:
+
+    - name: Print Serice Facts
+      ansible.builtin.debug:
+        msg: "{{ ansible_facts['services']['httpd.service']['state'] }}"
+
+    - name: Store ServiceFacts in File
+      ansible.builtin.lineinfile:      
+        line: | 
+          
+          Service Information
+          {{ ansible_facts['services']['httpd.service']['name'] }} = {{ ansible_facts['services']['httpd.service']['state'] }}
+        path: /tmp/{{ inventory_hostname }}
+
