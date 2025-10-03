@@ -1,0 +1,25 @@
+- name: Install Web Server
+  hosts:
+    - servera*
+    # - serverb*
+    # - serverc*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install Web Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Deploy Web App
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: "Hello Web App"
+        mode: "0644"
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+      ## Pre-requisites NOT there, check mode
+    ## '-' List of SOmething

@@ -1,0 +1,50 @@
+- name: Configure Web Server
+  hosts: servera*
+  gather_facts: false
+  remote_user: devops
+  become_method: sudo
+  become: true
+  tasks:
+    - name: Install Web Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Deploy Web App
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: "Hello Web App"
+        mode: "0644"
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+
+    - name: permit traffic for httpd
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+
+
+- name: Test Web Server
+  hosts: control
+  gather_facts: false
+  remote_user: student
+  become: false
+  tasks:
+    - name: Ping the Server
+      ansible.builtin.ping:
+
+    - name: Access Web App
+      ansible.builtin.uri:
+        url: http://servera.lab.example.com
+        return_content: true
+      register: fabian_out
+
+    - name: Print the captured output
+      ansible.builtin.debug:
+        var: fabian_out.content
+        # var: fabian_out

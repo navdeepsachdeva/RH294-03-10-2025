@@ -1,0 +1,14 @@
+- name: External Roles Reference
+  hosts: servera*
+  gather_facts: false
+  roles:
+    # - role: sangmin_mysql
+    - role: security_server
+    # - role: cisco.catalystwan.health_checks
+    - role: redhat.rhel_system_roles.cockpit
+  
+  tasks:
+    - name: Create job
+      ansible.memsource.memsource_job:
+        project_uid: project_uid
+        filename: /path/to/file

@@ -1,0 +1,20 @@
+- name: Converting Ad-Hoc to Playbook
+  # hosts: servera*,serverb*,serverc*
+  hosts: dev
+  # ,test
+  gather_facts: false
+  tasks:
+    - name: Create a File
+      ansible.builtin.copy:
+        dest: /tmp/f1
+        content: "Hello Robin"
+        mode: "0644"
+
+    - name: Create a user
+      ansible.builtin.user:
+        name: sangmin
+        shell: /bin/bash
+        state: present
+        uid: 2000
+      # INI Format
+      # ansible.builtin.copy: dest=/tmp/f1 content="Hello ERIK"

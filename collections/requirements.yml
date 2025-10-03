@@ -1,0 +1,14 @@
+---
+collections:
+  - name: cisco.catalystwan
+    version: 0.3.1
+
+  - name: /home/student/Downloads/ansible-memsource-1.0.1.tar.gz
+
+  # - name: community.mysql
+  - name: community.zabbix
+
+
+roles:
+  - name: navdeepsachdeva.windows_iis
+  - name: geerlingguy.php

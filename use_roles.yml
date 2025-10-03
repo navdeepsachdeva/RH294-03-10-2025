@@ -1,0 +1,79 @@
+- name: Roles Demo
+  hosts: servera*
+  gather_facts: true
+
+  pre_tasks:
+    - name: Stop the Playbook via assert module
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.architecture == "x86_64"
+          - ansible_facts['memory_mb']['real']['free'] > 300
+        fail_msg: "Required Memory or Arch not Available"
+        success_msg: "Hurray Pre-Requisites Match"
+  
+    - name: Inform Cluster for Downtime
+      ansible.builtin.command:
+        cmd: sleep 2
+      notify:
+        - services_down_handler
+
+  roles:
+    - role: web_server
+      become: true
+      web_server_content: "Override via Play Level"
+
+  tasks:
+    - name: Extra Topping
+      ansible.builtin.command:
+        cmd: sleep 2
+      notify:
+        - extra_handler
+
+    - name: Import/Include a Role
+      # ansible.builtin.import_role:
+      ansible.builtin.include_role:
+        name: simple
+      when: youme is not defined
+
+  post_tasks:
+    - name: Ping the Server
+      ansible.builtin.ping:
+      register: ping_out
+      changed_when: ping_out.ping == "pong"
+      notify:
+        - Server Available
+ 
+    - name: Access Web App
+      ansible.builtin.uri:
+        url: http://servera.lab.example.com
+        return_content: true
+      register: access_out
+      changed_when: access_out.status == 200
+      notify:
+        - Web Server Available
+        - services_up_handler
+ 
+    - name: Print the captured output
+      ansible.builtin.debug:
+        var: access_out.content
+
+  handlers:
+    - name: extra_handler
+      ansible.builtin.debug:
+        msg: "Extra Handler for Extra Task"
+
+    - name: services_down_handler
+      ansible.builtin.debug:
+        msg: "Instragram Down Sleep Now"
+
+    - name: Server Available
+      ansible.builtin.debug:
+        msg: "Got {{ ping_out.ping }} from  {{ access_out.url }}"
+ 
+    - name: Web Server Available
+      ansible.builtin.debug:
+        msg: "{{ access_out.url }} Tested Successfully"
+
+    - name: services_up_handler
+      ansible.builtin.debug:
+        msg: "Instragram UP Start Wasting Time"

@@ -1,0 +1,26 @@
+<html>
+<head>
+<title>This is Index Info Page</title>
+</head>
+<body>
+     Magic Variable  = {{ inventory_hostname }}
+     Arch1           = {{ ansible_architecture }}
+     Arch2           = {{ ansible_facts.architecture }}
+     Arch3           = {{ ansible_facts['architecture'] }}
+     Date            = {{ ansible_facts['date_time']['date'] }}
+     Time            = {{ ansible_facts['date_time']['time'] }}
+     IP Address      = {{ ansible_facts['default_ipv4']['address'] }}
+     Mac Address     = {{ ansible_default_ipv4.macaddress }}
+     VDA Size        = {{ ansible_facts['devices']['vda']['size'] }}
+     OS Type         = {{ ansible_facts['distribution'] }}
+     OS Version      = {{ ansible_facts['distribution_version'] }}
+     FQDN            = {{ ansible_facts['fqdn'] }}
+     Hostname        = {{ ansible_hostname }}
+     Kernel          = {{ ansible_facts.kernel }}
+     Total Memory    = {{ ansible_facts['memory_mb']['real']['total'] }}
+     Free Memory     = {{ ansible_facts['memory_mb']['real']['free'] }}
+     Python Ver      = {{ ansible_facts['python_version'] }}
+     User Name       = {{ ansible_facts.ansible_local.company.user.emp_name}}
+     Dept Manager    = {{ ansible_facts.ansible_local.company.dept.dept_manager }}
+</body>
+</html>

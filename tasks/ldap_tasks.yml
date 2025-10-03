@@ -1,0 +1,15 @@
+- name: Setup LDAP Task 1
+  ansible.builtin.command:
+    cmd: sleep 2
+
+- name: Setup LDAP Task 2
+  ansible.builtin.command:
+    cmd: sleep 2
+
+- name: Setup LDAP Task 3
+  ansible.builtin.command:
+    cmd: sleep 2
+
+- name: Setup LDAP Task 4
+  ansible.builtin.command:
+    cmd: sleep 2

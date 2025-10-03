@@ -1,0 +1,35 @@
+## INI Format Inventory ##
+
+
+# 172.25.250.220
+
+[all:vars]
+simple_floor="Level-3 Inventory file"
+
+[control]
+# ansible_host provides alias for a host
+# Control_Stockholm ansible_host=workstation.lab.example.com
+workstation.lab.example.com
+
+[dev]
+servera.lab.example.com
+# Web_London ansible_host=servera.lab.example.com
+
+[test]
+serverb.lab.example.com
+# DB_Paris ansible_host=serverb.lab.example.com
+
+[prod]
+serverc.lab.example.com
+serverd.lab.example.com simple_floor="Level-8 Inventory file ServerD"
+# DB_Lisbon ansible_host=serverc.lab.example.com
+# DB_Amsterdam ansible_host=serverd.lab.example.com simple_floor="Level-8 Inventory file ServerD"
+
+[managed:children]
+dev
+test
+
+# [range]
+# system[A:D].grid.com
+# 192.168.1.[5:8]
+# 192.16[7:8].[1:4].[5:8]

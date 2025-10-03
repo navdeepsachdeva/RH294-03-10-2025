@@ -1,0 +1,36 @@
+- name: failed_when/fail/assert Demo
+  hosts: servera*
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Install Web Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: latest
+      register: captured
+      # failed_when: not captured.changed
+      # failed_when: captured.changed == false
+
+    # - name: Stop the Playbook via fail module
+    #   ansible.builtin.fail:
+    #     msg: "Packages Didn't got Updated"
+    #   when: not captured.changed
+
+    - name: Stop the Playbook via assert module
+      ansible.builtin.assert:
+        that:
+          - captured.changed
+          - ansible_facts['memory_mb']['real']['free'] > 300
+        fail_msg: "Packages Didn't got Updated"
+        success_msg: "Hurray Success"
+
+    - name: Deploy Web App
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: "Hello Web App"
+        mode: "0644"
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started

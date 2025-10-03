@@ -1,0 +1,20 @@
+- name: Facts Demo
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Change place for Custom Facts
+      ansible.builtin.setup:
+        gather_subset:
+          - "!all"
+          - "min"
+          - "network"
+          - "hardware"
+        fact_path: /etc/ansible/facts.d
+
+    - name: Store Facts
+      ansible.builtin.debug:
+        msg: >
+          Magic Variable  = {{ inventory_hostname }}
+          IP Address      = {{ ansible_facts['default_ipv4']['address'] }}
+          User Name       = {{ ansible_facts.ansible_local.company.user.emp_name}}
+          Dept Manager    = {{ ansible_facts.ansible_local.company.dept.dept_manager }}

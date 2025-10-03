@@ -1,0 +1,60 @@
+- name: Force Handlers Demo
+  hosts: servera*
+  gather_facts: false
+  become: true
+  force_handlers: true
+  tasks:
+    - name: Install Web Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      notify:   
+        - Start Web Service
+        - Package Installed
+
+    - name: permit traffic for httpd
+      ansible.posix.firewalld:
+        service: httppppppp
+        permanent: true
+        state: enabled
+        immediate: true
+      notify:
+        - Web Port Opened
+
+    - name: Deploy Web App
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: "Hello Web App"
+        mode: "0644"
+      notify: 
+        - Start Web Service 
+        - App Deployed
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+
+  handlers:
+    - name: Extra Handlers
+      ansible.builtin.debug:
+        msg: "No One Interested"
+
+    - name: Web Port Opened
+      ansible.builtin.debug:
+        msg: "Web Port Opened Success"
+
+    - name: App Deployed
+      ansible.builtin.debug:
+        msg: "App Deployed Success"
+
+    - name: Package Installed
+      ansible.builtin.debug:
+        msg: "Package Installed Success"
+
+    - name: Start Web Service
+      become: true
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+

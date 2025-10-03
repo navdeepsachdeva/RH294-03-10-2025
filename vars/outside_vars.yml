@@ -1,0 +1,45 @@
+simple_floor: "Level-14 Play vars_files"
+
+os_list:
+  - Fedora
+  - Ubuntu
+  - RedHat
+
+simple_list:
+  - Tom
+  - Sangmin
+  - Robin
+  - Rameshwer
+
+complex_list:
+  - fn: Tom
+    ln: Brown
+  - fn: Sangmin
+    ln: PARK
+  - fn: Robin
+    ln: Ivehult
+  - fn: Rameshwer
+    ln: M
+user_dict:
+  Tom: Brown  
+  Sangmin: PARK
+  Robin: Ivehult
+  Rameshwer: M
+               
+packages:
+  - httpd
+  - vsftpd
+
+services:
+  - httpd
+  - vsftpd
+
+users:
+  bjones:
+    first_name: Bob
+    last_name: Jones
+    home_dir: /users/bjones
+  acook:
+    first_name: Anne
+    last_name: Cook
+    home_dir: /users/acook

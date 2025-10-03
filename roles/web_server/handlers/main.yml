@@ -1,0 +1,19 @@
+---
+# handlers file for web_server
+
+- name: System Info Collected
+  ansible.builtin.debug:
+    msg: "Hardware Info for {{ inventory_hostname }} Collected"
+
+- name: App Deployed
+  ansible.builtin.debug:
+    msg: "App Deployed on {{ inventory_hostname }} Success"
+
+- name: Package Installed
+  ansible.builtin.debug:
+    msg: "Package {{ web_server_package }} Installed Success"
+
+- name: Start Web Service
+  ansible.builtin.service:
+    name: "{{ web_server_service }}"
+    state: restarted

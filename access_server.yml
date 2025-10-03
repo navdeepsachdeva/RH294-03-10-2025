@@ -1,0 +1,36 @@
+- name: Test Web Server
+  hosts: control
+  gather_facts: true
+  remote_user: student
+  become: false
+  tasks:
+    - name: Ping the Server
+      ansible.builtin.ping:
+      register: ping_out
+      changed_when: ping_out.ping == "pong" 
+      delegate_to: servera.lab.example.com
+      notify:
+        - Server Available
+
+    - name: Access Web App
+      ansible.builtin.uri:
+        url: http://servera.lab.example.com
+        return_content: true
+      register: access_out
+      changed_when: access_out.status == 200
+      notify:
+        - Web Server Available
+
+    - name: Print the captured output
+      ansible.builtin.debug:
+        var: access_out.content
+
+  handlers:
+
+    - name: Server Available 
+      ansible.builtin.debug:
+        msg: "Got {{ ping_out.ping }} from  {{ access_out.url }}"
+
+    - name: Web Server Available
+      ansible.builtin.debug:
+        msg: "{{ access_out.url }} Tested Successfully"

@@ -1,0 +1,6 @@
+---
+# handlers file for simple
+
+- name: simple_handler
+  ansible.builtin.debug:
+    msg: "Simple Handler for Simple Role"

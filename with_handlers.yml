@@ -1,0 +1,41 @@
+- name: Dependency Task With Handlers
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    - name: Install Web Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      become: true
+      notify:
+        - Start Web Service
+        - Package Installed
+
+    - name: Deploy Web App
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: "Hello Web App Again"
+        mode: "0644"
+      become: true
+      notify:
+        - Start Web Service
+        - App Deployed
+
+  handlers:
+    - name: Extra Handlers
+      ansible.builtin.debug:
+        msg: "No One Interested"
+
+    - name: App Deployed
+      ansible.builtin.debug:
+        msg: "App Deployed Success"
+
+    - name: Package Installed
+      ansible.builtin.debug:
+        msg: "Package Installed Success"
+
+    - name: Start Web Service
+      become: true
+      ansible.builtin.service:
+        name: httpd
+        state: restarted

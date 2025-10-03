@@ -1,0 +1,26 @@
+- name: Variable Demo
+  hosts: test,prod
+  gather_facts: false
+  # Bad Way
+  vars:
+    simple_floor: "Level-12 Play vars"
+
+  # Level-13 Interactive Input
+  # Good for Development Env Only
+  vars_prompt:
+    - name: simple_floor
+      prompt: "Which floor you are in ?"
+      private: false
+
+  vars_files:
+    - vars/outside_vars.yml
+
+  roles:
+    - role: simple
+
+  tasks:
+    - name: Extra Task
+      ansible.builtin.debug:
+        msg: "{{ users.bjones.first_name }} and {{ users['acook']['home_dir'] }}"
+
+# ansible-navigator run variable_demo.yml -e "simple_floor='GOD LEVEL 22 GLOBAL SCOPE'"

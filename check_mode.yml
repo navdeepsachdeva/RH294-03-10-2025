@@ -1,0 +1,32 @@
+- name: Check Mode Web Server
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install Web Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      check_mode: false
+      ## Run in Actual Mode override --check/-C
+
+    - name: Deploy Web App
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: "Hello Web App"
+        mode: "0644"
+      # check_mode: true
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+      check_mode: true
+
+    - name: permit traffic for httpd
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+      check_mode: true

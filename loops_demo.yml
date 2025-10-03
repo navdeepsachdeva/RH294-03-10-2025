@@ -1,0 +1,67 @@
+- name: Loops Demo
+  hosts: servera*
+  gather_facts: false
+  # become: true
+  vars_files:
+    - vars/outside_vars.yml
+
+  # loop was introduced in Ansible 2.5
+  # loop only accept list
+  tasks:
+    - name: Print Simple List
+      when: item != "Sangmin"
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ simple_list }}"
+      # with_items: "{{ simple_list }}"
+
+    - name: Print Complex List
+      ansible.builtin.debug:
+        msg: "{{ item.fn }} = {{ item['ln']}}"
+      loop: "{{ complex_list }}"
+      # with_list: "{{ complex_list }}"
+
+    - name: Print User Dict
+      ansible.builtin.debug:
+        msg: "{{ item.key }} // {{ item['value'] }}"
+      loop: "{{ user_dict | dict2items }}"
+      # with_dict: "{{ user_dict }}"
+
+    - name: Print Network Ports
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      with_sequence: start=0 end=4 format=eth%x
+
+    - name: Install Multiple Packages BAD WAY
+      become: true
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages }}"
+
+    - name: Install Multiple Packages Good WAY
+      ansible.builtin.dnf:
+        name: "{{ packages }}"
+        state: present
+      become: true
+
+    - name: Start Web Service
+      become: true
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+      loop: "{{ services }}"
+
+    - name: Run Multiple Commands
+      ansible.builtin.command:
+        cmd: "{{ item }}"
+      loop:
+        - hostname
+        - tail -2 /etc/passwd
+        - pwd
+      register: captured
+
+    - name: Print captured output
+      ansible.builtin.debug:
+        msg: "{{ item.item }} -- {{ item['stdout'] }}"
+      loop: "{{ captured['results'] }}"

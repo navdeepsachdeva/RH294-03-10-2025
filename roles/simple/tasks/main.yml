@@ -1,0 +1,12 @@
+---
+# tasks file for simple
+
+- name: Print Floor Level
+  ansible.builtin.debug:
+    msg: "{{ inventory_hostname }} = {{ simple_floor }}"
+
+- name: Sleep in simple Role
+  ansible.builtin.command:
+    cmd: sleep 2
+  notify:
+    - simple_handler

@@ -1,0 +1,9 @@
+- name: Complex Template Demo
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Deploy Template File
+      ansible.builtin.template:
+        src: ./j2/complex.j2
+        dest: /tmp/system_info.html
+      when: inventory_hostname in groups["control"]

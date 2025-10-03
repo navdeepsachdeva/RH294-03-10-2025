@@ -1,0 +1,29 @@
+- name: Import First Playbok
+  ansible.builtin.import_playbook: multiple_play.yml
+
+- name: Integration Playbook
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    # - name: Import/static a Task File
+    #   ansible.builtin.import_tasks:
+    #     file: tasks/oracle_tasks.yml
+    #   when: youme is not defined
+
+    # - name: Include/dynamic a Task File
+    #   ansible.builtin.include_tasks:
+    #     file: tasks/ldap_tasks.yml 
+    #   when: youme is not defined
+
+
+    - name: Loop for Task Files
+      ansible.builtin.import_tasks:
+      ansible.builtin.include_tasks:
+        file: "{{ item }}"
+      loop:
+        - tasks/oracle_tasks.yml
+        - tasks/ldap_tasks.yml
+      when: youme is not defined
+
+- name: Import Variable Playbok
+  ansible.builtin.import_playbook: variable_demo.yml

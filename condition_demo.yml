@@ -1,0 +1,34 @@
+- name: Condition Demo
+  hosts: servera*
+  gather_facts: true
+  vars_files:
+    - vars/outside_vars.yml
+  tasks:
+    - name: Install Web Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      register: captured
+      become: true
+
+    - name: Print captured output
+      ansible.builtin.debug:
+        msg: "{{ captured }}"
+
+    - name: Start Web Service
+      become: true
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+      when:
+        - captured.changed == true or ansible_facts['kernel'] > "5.10"
+        - ansible_facts['distribution'] in  os_list
+        - meme is not defined
+      # when: captured.changed == true and ansible_facts['distribution'] in  os_list
+
+    # - name: Deploy Web App
+    #   ansible.builtin.copy:
+    #     dest: /var/www/html/index.html
+    #     content: "Hello Web App"
+    #     mode: "0644"
+

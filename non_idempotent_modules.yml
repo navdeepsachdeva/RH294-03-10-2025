@@ -1,0 +1,19 @@
+- name: Non Idempotent Modules
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    - name: Read a File via command
+      ansible.builtin.command:
+        cmd: tail -n 2 /etc/passwd
+
+    - name: Read a File via shell
+      ansible.builtin.shell:
+        cmd: touch /tmp/me1
+
+    # - name: Install Python
+    #   ansible.builtin.dnf:
+    #     name: python3
+    #     state: present
+
+    - name: Install Python on Manages Host
+      ansible.builtin.raw: dnf install -y python3

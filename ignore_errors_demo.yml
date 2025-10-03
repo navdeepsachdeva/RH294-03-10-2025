@@ -1,0 +1,29 @@
+- name: Ignore Errors Demo
+  hosts: servera*
+  gather_facts: false
+  become: true
+  # ignore_errors: true
+  tasks:
+    - name: permit traffic for httpd
+      ansible.posix.firewalld:
+        service: httppp
+        permanent: true
+        state: enabled
+        immediate: true
+      ignore_errors: true
+
+    - name: Install Web Server
+      ansible.builtin.dnf:
+        name: httpddd
+        state: present
+
+    - name: Deploy Web App
+      ansible.builtin.copy:
+        dest: /var/wwwww/html/index.html
+        content: "Hello Web App"
+        mode: "0644"
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpddd
+        state: started

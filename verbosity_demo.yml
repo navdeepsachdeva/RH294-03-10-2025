@@ -1,0 +1,23 @@
+- name: Verbosity Demo
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    - name: Install Web Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      register: captured
+      become: true
+
+    - name: Print captured output
+      ansible.builtin.debug:
+        msg: "{{ captured }}"
+        verbosity: 2
+
+    # - name: Start Web Service
+    #   become: true
+    #   ansible.builtin.service:
+    #     name: httpd
+    #     state: restarted
+    #   when: captured.changed
+      # when: captured.changed == true

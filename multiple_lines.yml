@@ -1,0 +1,31 @@
+- name: Converting Ad-Hoc to Playbook
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    - name: Create a File Bad Way
+      ansible.builtin.copy:
+        dest: /tmp/f1
+        content: Extremely Long line, finding it very difficult to fix in one line and readability is almost NONE, what to do? Solution please
+        mode: "0644"
+
+    - name: Create a File Better Same Line
+      ansible.builtin.copy:
+        dest: /tmp/f2
+        content: >
+            Extremely Long line,
+            finding it very difficult to fix in one line and
+            readability is almost NONE,
+            what to do?
+            Solution please"
+        mode: "0644"
+
+    - name: Create a File Better Same Format
+      ansible.builtin.copy:
+        dest: /tmp/f3
+        content: |
+            Extremely Long line,
+            finding it very difficult to fix in one line and
+            readability is almost NONE,
+            what to do?
+            Solution please"
+        mode: "0644"

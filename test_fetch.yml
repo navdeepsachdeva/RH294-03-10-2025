@@ -1,0 +1,9 @@
+- name: Test Web Server
+  hosts: servera*
+  gather_facts: false
+  become: false
+  tasks:
+    - name: Ping the Server
+      ansible.builtin.fetch:
+        src: /tmp/me
+        dest: ./you
